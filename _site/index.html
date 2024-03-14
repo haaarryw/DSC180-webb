@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Cayman theme | Cayman is a clean, responsive theme for GitHub Pages.</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Cayman theme" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Cayman is a clean, responsive theme for GitHub Pages." />
+<meta property="og:description" content="Cayman is a clean, responsive theme for GitHub Pages." />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="Cayman theme" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Cayman theme" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"Cayman is a clean, responsive theme for GitHub Pages.","headline":"Cayman theme","name":"Cayman theme","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" as="style" type="text/css" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Cayman theme</h1>
+      <h2 class="project-tagline">Cayman is a clean, responsive theme for GitHub Pages.</h2>
+      
+      
+        <a href="" class="btn">Download .zip</a>
+        <a href="" class="btn">Download .tar.gz</a>
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="causal-inference-in-recommender-system-manipulating-popularity-bias">Causal Inference in Recommender System: Manipulating Popularity Bias</h1>
+<p>The widespread use of recommender systems across various platforms has introduced a pervasive challenge - <strong>popularity bias</strong>. This bias overshadows personalized selections and limits the diversity of recommendation systems, as they tend to prioritize widely popular items, hindering the discovery of unpopular content that may better align with individual user preferences.</p>
+
+<h2 id="introduction">Introduction</h2>
+<p>Popularity bias serves as a confounding factor in item and user interactions. Traditional algorithms often lean towards promoting popular items for profit, or overlook the significance of popularity, resulting in an imbalanced promotion of trending items. As a result, the content recommended to users often reflects prevailing trends more than their interests. This biased prioritization fosters a self-reinforcing loop, where popular items continue to be promoted.</p>
+
+<p>To address popularity bias, we use the causal inference approach to de-bias user history data. We implemented two models, the Popularity-bias De-confounding and Adjusted model (<a href="https://arxiv.org/pdf/2105.06067.pdf">PDA</a>), and the Disentangling Interest and Conformity with causal Embeddings model (<a href="https://arxiv.org/pdf/2006.11011.pdf">DICE</a>) to produce more personalized recommendations. The two models introduce different logic behind manipulating the popularity bias, and we will discuss the details in the Methodology section.</p>
+
+<p>We found that <strong>instead of completely removing the popularity bias, incorporating the bias in the algorithms performs better results, ie. achieving higher recall rates</strong>.</p>
+
+<h2 id="conventional-recommender-systems">Conventional Recommender Systems</h2>
+<p>Recommender Systems are widely utilized in various online platforms such as personalized shopping recommendations, streaming platforms, and social media advertisements. These platforms employ the systems to match users to their potential preferences. Existing recommendation systems are divided into two categories, collaborative filtering(CF) and content-based recommendation(CTR). CF extracts the user preference based on users’ historical behaviors in which algorithms conduct similarities between users and items from historical interactions. CTR prediction takes advantage of high-order features of users, items, or context, to feed into neural networks. These traditional popular systems, although they involve high-level deep learning techniques, focus on correlations in data rather than causality, which is not induced by the former.</p>
+
+<p>Here, our project borrowed ideas from ZHANG and ZHENG’s papers to integrate causal inference into recommendation systems, which enhance the accuracy and interpretability of personalized suggestions. These two proposed models, rooted in causal reasoning, provide a valuable framework for other recommender algorithms.</p>
+
+<h2 id="causal-inference">Causal Inference</h2>
+<p>Let’s take a look at the popularity bias under causal relationships.</p>
+
+<p>In Figure 1(a), the traditional recommendation methods take user information (U node) and item information (I node) to account for the interaction, namely click (C node). This relationship form, <strong>I -&gt; C</strong> and <strong>U -&gt; C</strong>, is called the <em>collider effect</em>, that U and I are independent of each other, but both contribute to C.</p>
+
+<p>However, in reality, a third factor, popularity (Z node) affects the interaction (C node) and the item information (I node). This Z variable is called a <em>confounder</em>, shown in Figure 1(b). To be specific, people have a conformity mentality that tends to follow the majority to choose purchase (<strong>Z -&gt; C</strong>). So the more popular the items are, the more likely people will interact with them. On the other hand, recommender models tend to inherit the bias in the data to expose popular items more frequently (<strong>Z -&gt; I -&gt; C</strong>), which further exacerbates the popularity bias. The popularity (Z) that existed in the second path is a bias amplification and we want to remove or control the strength of it. 
+<img src="images/pda_causal_graph.png" alt="Image" /></p>
+<p align="center"><em>Figure 1: Causal Relationship Between Popularity and User Click</em></p>
+
+<h2 id="data-processing">Data Processing</h2>
+
+<h2 id="methodology">Methodology</h2>
+<h3 id="pda">PDA</h3>
+<html>
+<body>
+  <p>- Causal inference offers a solution to de-bias user behavior data and removes the influence of popularity, allowing recommendation systems to provide more equitable and unbiased suggestions. The predictive model is \( P(Z \vert \text{do}(U, I)) \), where "do" means intervention.
+
+  <p>- In the PD model, we completely remove popularity bias. We use \( ELU(f(u,i)) \), a user-item matching score, to indicate \( P(Z \vert \text{do}(U, I)) \), the probability of user behavior given user and item information.
+
+  <p>- In the PDA model, we control the strength of popularity bias, which is a parameter \( \gamma \). We use \( ELU(f(u,i))*m_i^{\gamma} \) to estimate \( P(C \vert \text{do}(U, I), \text{do}(Z)) \), the probability of user behavior by intervening user &amp; item and the popularity bias. Here \( m_i \) is the popularity value of \( Z=z \).
+
+  <p>- Then we optimize the BPR loss function to train the model.</p>
+&lt;/body&gt;
+&lt;/html&gt;
+<!-- - Causal inference offers a solution to de-bias user behavior data and removes the influence of popularity, allowing recommendation systems to provide more equitable and unbiased suggestions. The predictive model is P(Z|do(U, I)), where do means intervention. 
+- In the PD model, we completely remove popularity bias. We use $ELU(f(u,i))$, a user-item matching score, to indicate $P(Z|do(U, I))$, the probability of user behavior given user and item information. 
+- In the PDA model, we control the strength of popularity bias, which is a parameter $\gamma$. We use $ELU(f(u,i))*m_i^{\gamma}$ to estimate $P(C|do(U, I), do(Z))$, the probability of user behavior by intervening user & item and the popularity bias. Here $m_i$ is the popularity value of $Z=z$.
+- Then we optimize the BPR loss function to train the model. -->
+
+![Image](images/pda.png)
+<p align="center"><em>Figure 2: PDA model task flow</em></p>
+ 
+### DICE
+<html>
+ <head>
+    <title>test</title>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  </head>
+ 
+ <body>
+\[ L = L_{\text{click}}^{O_1 + O_2} + \alpha \cdot (L_{\text{interest}}^{O_2} + L_{\text{conformity}}^{O_1 + O_2}) + \beta \cdot L_{\text{discrepancy}} \]
+
+    <p>- The DICE model separates user interest (same idea as U in PDA) and conformity (same idea as Z in PDA) embeddings, from which popularity bias is considered as a cause of user behavior.</p>
+    <p>- The DICE methodology is a framework for disentangling user and item embeddings, which can be incorporated into other recommender models.</p>
+    <p>- We separate dataset \( O \) to two cause-specific datasets. \( O_1 \) is conformity-caused data, and \( O_2 \) is interest-caused data.</p>
+    <p>- We learn user and item embeddings separately in \( O_1 \) and \( O_2 \). Then we concatenate two embeddings to estimate clicks, ie. user behavior.</p>
+    <p>- Adopting multi-task curriculum learning, the final loss function is \[ L = L_{\text{click}}^{O_1 + O_2} + \alpha \cdot (L_{\text{interest}}^{O_2} + L_{\text{conformity}}^{O_1 + O_2}) + \beta \cdot L_{\text{discrepancy}} \]</p>
+
+<!-- - The DICE model separates user interest (same idea as U in PDA) and conformity (same idea as Z in PDA) embeddings, from which popularity bias is considered as a cause of user behavior.  
+- The DICE methodology is a framework for disentangling user and item embeddings, which can be incorporated into other recommender models.
+- We separate dataset \( O \) to two cause-specific datasets. \( O_1 \) is conformity-caused data, and \( O_2 \) is interest-caused data. 
+- We learn user and item embeddings separately in \( O_1 \) and \( O_2 \). Then we concatenate two embeddings to estimate clicks, ie. user behavior. 
+- Adopting multi-task curriculum learning, the final loss function is\[ L = L_{\text{click}}^{O_1 + O_2} + \alpha \cdot (L_{\text{interest}}^{O_2} + L_{\text{conformity}}^{O_1 + O_2}) + \beta \cdot L_{\text{discrepancy}} \] -->
+ </body>
+</html>
+
+![Image](images/dice.png)
+<p align="center"><em>Figure 3: DICE model task flow</em></p>
+
+## Result
+new page
+
+## Application &amp; Concern
+
+## Reference
+- [Zhang, Yang, Fuli Feng, Xiangnan He, Tianxin Wei, Chonggang Song, Guohui Ling, and Yongdong Zhang.2021. “Causal intervention for leveraging popularity bias in recommendation.” In Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval.](https://arxiv.org/pdf/2105.06067.pdf)
+ 								
+- [Yu Zheng, Chen Gao, Xiang Li, Xiangnan He, Depeng Jin, Yong Li. 2021. Disentangling User Interest and Conformity for Recommendation with Causal Embedding. In Proceedings of the Web Conference 2021.](https://arxiv.org/pdf/2006.11011.pdf)
+</p></p></p></body></html>
+
+
+      <footer class="site-footer">
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>
